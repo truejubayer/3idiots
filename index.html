@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>আমাদের মেমরিজ - তিন বন্ধুর জগৎ</title>
+    <title>Memorys of Three Idiots</title>
     <style>
         :root {
             --primary-color: #4f46e5;
@@ -29,8 +29,31 @@
         }
 
         header {
+            position: relative;
             text-align: center;
             margin-bottom: 30px;
+            padding-top: 10px;
+        }
+
+        /* About Button Style */
+        .about-btn {
+            position: absolute;
+            top: 0;
+            right: 10px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid #334155;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .about-btn:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
         }
 
         h1 {
@@ -127,6 +150,7 @@
             justify-content: center;
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
 
         .media-container img, 
@@ -136,29 +160,54 @@
             object-fit: cover;
         }
 
-        .media-container audio {
-            width: 90%;
-        }
-
         .media-info {
             padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .media-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .media-title {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 600;
-            margin-bottom: 5px;
             color: var(--text-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
         }
 
         .media-type-badge {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
             background: #334155;
             padding: 3px 8px;
             border-radius: 4px;
             color: var(--text-secondary);
-            display: inline-block;
+        }
+
+        /* Download Button Style */
+        .download-btn {
+            background-color: #3b82f6;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .download-btn:hover {
+            background-color: #2563eb;
         }
 
         .no-result {
@@ -168,12 +217,72 @@
             font-size: 1.2rem;
             padding: 40px;
         }
+
+        /* Modal Styles (About & Preview) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Preview Modal Specifics */
+        .preview-content {
+            max-width: 850px;
+            width: 100%;
+            max-height: 90vh;
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .preview-content img, 
+        .preview-content video {
+            max-width: 100%;
+            max-height: 75vh;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.8rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            z-index: 1010;
+        }
+
+        .close-btn:hover {
+            color: var(--text-color);
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>আমাদের তিন বন্ধুর স্মৃতি</h1>
+        <button class="about-btn" id="aboutBtn">About</button>
+        <h1>Memorys of Three Idiots</h1>
         <p class="subtitle">আমাদের সোনালী দিনগুলোর সুন্দর মুহূর্তসমূহ</p>
     </header>
 
@@ -184,7 +293,6 @@
             <button class="tab-btn active" data-filter="all">সব (All)</button>
             <button class="tab-btn" data-filter="photo">ফটো (Photos)</button>
             <button class="tab-btn" data-filter="video">ভিডিও (Videos)</button>
-            <button class="tab-btn" data-filter="audio">অডিও (Audios)</button>
         </div>
     </div>
 
@@ -192,46 +300,81 @@
         <!-- জাভাস্ক্রিপ্ট দিয়ে কার্ডগুলো এখানে লোড হবে -->
     </div>
 
+    <!-- About Modal -->
+    <div class="modal" id="aboutModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeAbout">&times;</span>
+            <h2 style="margin-bottom: 15px; color: #818cf8;">আমাদের সম্পর্কে</h2>
+            <p style="color: var(--text-secondary); line-height: 1.6;">
+                এটি আমাদের তিন বন্ধুর একটি ব্যক্তিগত মেমরি সাইট। এখানে আমাদের জীবনের সেরা মুহূর্তগুলোর ছবি এবং ভিডিও সংরক্ষিত আছে। গিটহাবে হোস্ট করা আমাদের এই ছোট প্রচেষ্টাটি সারাজীবন আমাদের বন্ধুত্বের স্মারক হয়ে থাকবে। <br> The page is created by JUBAYER TALUKDAR <br> truejubayer@gmail.com
+            </p>
+        </div>
+    </div>
+
+    <!-- Media Preview Modal -->
+    <div class="modal" id="previewModal">
+        <div class="preview-content">
+            <span class="close-btn" id="closePreview">&times;</span>
+            <div id="previewContainer" style="width: 100%; display: flex; justify-content: center; align-items: center;"></div>
+        </div>
+    </div>
+
     <script>
         // ==========================================
-        // মিডিয়া ডেটা লিস্ট (ভবিষ্যতে নতুন ফাইল যুক্ত করতে চাইলে এখানে বাড়িয়ে নেবে)
+        // মিডিয়া ডেটা লিস্ট তৈরি
         // ==========================================
         const mediaData = [];
 
-        // ১ থেকে ১০০ পর্যন্ত ফটো অটো জেনারেট করার লুপ (চাইলে কাস্টম টাইটেলও বসাতে পারো)
-        for (let i = 1; i <= 100; i++) {
+        // ১ থেকে ১০০ পর্যন্ত ফটো যোগ করার লুপ
+        for (let i = 1; i <= 94; i++) {
+            let customTitle = `photo (${i})`;
+            if (i === 1) {
+                customTitle = 'আমাদের প্রথম আড্ডা (Photo 1)';
+            }
             mediaData.push({
                 type: 'photo',
-                // কাস্টম টাইটেল দিতে চাইলে নিচের লাইনে নাম পরিবর্তন করতে পারো, যেমন: i === 1 ? 'আমাদের প্রথম ট্যুর' : `photo${i}`
-                title: `photo${i}`, 
-                url: `photos/photo${i}.jpg`
+                title: customTitle,
+                url: `photos/photo (${i}).jpg`
             });
         }
 
-        // ভিডিও ফাইল যোগ করার নিয়ম (এভাবে ভিডিও বাড়াতে পারো)
+        // ভিডিও ফাইল যোগ করার লুপ
         for (let i = 1; i <= 10; i++) {
+            let customTitle = `video (${i})`;
+            if (i === 1) {
+                customTitle = 'ট্যুরের মজার মুহূর্ত (Video 1)';
+            }
             mediaData.push({
                 type: 'video',
-                title: `video${i}`,
-                url: `videos/video${i}.mp4`
+                title: customTitle,
+                url: `videos/video (${i}).mp4`
             });
         }
 
-        // অডিও ফাইল যোগ করার নিয়ম (এভাবে অডিও বাড়াতে পারো)
-        for (let i = 1; i <= 5; i++) {
-            mediaData.push({
-                type: 'audio',
-                title: `audio${i}`,
-                url: `audios/audio${i}.mp3`
-            });
+        const originalData = [...mediaData];
+
+        // অল (All) সেকশনের জন্য র‍্যান্ডম (এলোমেলো) করার ফাংশন
+        function getRandomizedData(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
         }
 
-        // চাহিদা অনুযায়ী শেষের ফাইলগুলো উপরে দেখতে চাইলে অ্যারে রিভার্স করে নিচ্ছি
-        mediaData.reverse();
+        let randomizedAllData = getRandomizedData(mediaData);
 
         const grid = document.getElementById('galleryGrid');
         const searchInput = document.getElementById('searchInput');
         const tabButtons = document.querySelectorAll('.tab-btn');
+        const aboutBtn = document.getElementById('aboutBtn');
+        const aboutModal = document.getElementById('aboutModal');
+        const closeAbout = document.getElementById('closeAbout');
+        
+        const previewModal = document.getElementById('previewModal');
+        const closePreview = document.getElementById('closePreview');
+        const previewContainer = document.getElementById('previewContainer');
 
         let currentFilter = 'all';
         let searchQuery = '';
@@ -240,8 +383,9 @@
         function renderGallery() {
             grid.innerHTML = '';
 
-            // ফিল্টার এবং সার্চ লজিক
-            const filteredData = mediaData.filter(item => {
+            let dataSource = (currentFilter === 'all') ? randomizedAllData : originalData;
+
+            const filteredData = dataSource.filter(item => {
                 const matchesFilter = currentFilter === 'all' || item.type === currentFilter;
                 const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase());
                 return matchesFilter && matchesSearch;
@@ -258,24 +402,35 @@
 
                 let mediaElement = '';
                 if (item.type === 'photo') {
-                    // loading="lazy" দিয়ে স্ক্রিনে আসার আগ পর্যন্ত লোড হওয়া আটকানো হয়েছে
-                    mediaElement = `<div class="media-container"><img src="${item.url}" alt="${item.title}" loading="lazy" onerror="this.parentElement.innerHTML='<span style=\'color:#ef4444;\'>ছবি পাওয়া যায়নি</span>'"></div>`;
+                    mediaElement = `<div class="media-container" onclick="openPreview('photo', '${item.url}')"><img src="${item.url}" alt="${item.title}" loading="lazy" onerror="this.parentElement.innerHTML='<span style=\'color:#ef4444; font-size:0.9rem;\'>ছবি পাওয়া যায়নি</span>'"></div>`;
                 } else if (item.type === 'video') {
-                    mediaElement = `<div class="media-container"><video controls preload="none"><source src="${item.url}" type="video/mp4">আপনার ব্রাউজার ভিডিও সাপোর্ট করে না।</video></div>`;
-                } else if (item.type === 'audio') {
-                    mediaElement = `<div class="media-container" style="height: 100px;"><audio controls preload="none"><source src="${item.url}" type="audio/mpeg">আপনার ব্রাউজার অডিও সাপোর্ট করে না।</audio></div>`;
+                    mediaElement = `<div class="media-container"><video preload="none" onclick="openPreview('video', '${item.url}')"><source src="${item.url}" type="video/mp4">আপনার ব্রাউজার ভিডিও সাপোর্ট করে না।</video></div>`;
                 }
 
                 card.innerHTML = `
                     ${mediaElement}
                     <div class="media-info">
-                        <div class="media-title">${item.title}</div>
-                        <span class="media-type-badge">${item.type}</span>
+                        <div class="media-details">
+                            <div class="media-title" title="${item.title}">${item.title}</div>
+                            <span class="media-type-badge">${item.type}</span>
+                        </div>
+                        <a href="${item.url}" class="download-btn" download>ডাউনলোড</a>
                     </div>
                 `;
 
                 grid.appendChild(card);
             });
+        }
+
+        // প্রিভিউ ওপেন করার ফাংশন
+        window.openPreview = function(type, url) {
+            previewContainer.innerHTML = '';
+            if (type === 'photo') {
+                previewContainer.innerHTML = `<img src="${url}" alt="Preview">`;
+            } else if (type === 'video') {
+                previewContainer.innerHTML = `<video src="${url}" controls autoplay style="max-width:100%; max-height:75vh; border-radius:8px;"></video>`;
+            }
+            previewModal.style.display = 'flex';
         }
 
         // ট্যাব ক্লিক হ্যান্ডলার
@@ -292,6 +447,25 @@
         searchInput.addEventListener('input', (e) => {
             searchQuery = e.target.value.trim();
             renderGallery();
+        });
+
+        // About Modal Control
+        aboutBtn.addEventListener('click', () => { aboutModal.style.display = 'flex'; });
+        closeAbout.addEventListener('click', () => { aboutModal.style.display = 'none'; });
+
+        // Preview Modal Close Control
+        closePreview.addEventListener('click', () => { 
+            previewModal.style.display = 'none'; 
+            previewContainer.innerHTML = ''; // বন্ধ করলে ভিডিও প্লেও বন্ধ হয়ে যাবে
+        });
+
+        // বাইরের অংশে ক্লিক করলে মোডাল বন্ধ হবে
+        window.addEventListener('click', (e) => {
+            if (e.target === aboutModal) { aboutModal.style.display = 'none'; }
+            if (e.target === previewModal) { 
+                previewModal.style.display = 'none'; 
+                previewContainer.innerHTML = ''; 
+            }
         });
 
         // প্রথমবার পেজ লোড হলে গ্যালারি রেন্ডার হবে
