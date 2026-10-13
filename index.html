@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আমাদের মেমরিজ - তিন বন্ধুর জগৎ</title>
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-color: #6366f1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Controls Section (Search & Filter Tabs) */
+        .controls {
+            max-width: 900px;
+            margin: 0 auto 30px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-box:focus {
+            border-color: var(--primary-color);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background-color: var(--card-bg);
+            color: var(--text-secondary);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .media-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s;
+        }
+
+        .media-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .media-container {
+            width: 100%;
+            height: 200px;
+            background-color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .media-container img, 
+        .media-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .media-container audio {
+            width: 90%;
+        }
+
+        .media-info {
+            padding: 15px;
+        }
+
+        .media-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+
+        .media-type-badge {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            background: #334155;
+            padding: 3px 8px;
+            border-radius: 4px;
+            color: var(--text-secondary);
+            display: inline-block;
+        }
+
+        .no-result {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>আমাদের তিন বন্ধুর স্মৃতি</h1>
+        <p class="subtitle">আমাদের সোনালী দিনগুলোর সুন্দর মুহূর্তসমূহ</p>
+    </header>
+
+    <div class="controls">
+        <input type="text" id="searchInput" class="search-box" placeholder="টাইটেল দিয়ে সার্চ করুন...">
+        
+        <div class="filter-tabs">
+            <button class="tab-btn active" data-filter="all">সব (All)</button>
+            <button class="tab-btn" data-filter="photo">ফটো (Photos)</button>
+            <button class="tab-btn" data-filter="video">ভিডিও (Videos)</button>
+            <button class="tab-btn" data-filter="audio">অডিও (Audios)</button>
+        </div>
+    </div>
+
+    <div class="gallery-grid" id="galleryGrid">
+        <!-- জাভাস্ক্রিপ্ট দিয়ে কার্ডগুলো এখানে লোড হবে -->
+    </div>
+
+    <script>
+        // ==========================================
+        // মিডিয়া ডেটা লিস্ট (ভবিষ্যতে নতুন ফাইল যুক্ত করতে চাইলে এখানে বাড়িয়ে নেবে)
+        // ==========================================
+        const mediaData = [];
+
+        // ১ থেকে ১০০ পর্যন্ত ফটো অটো জেনারেট করার লুপ (চাইলে কাস্টম টাইটেলও বসাতে পারো)
+        for (let i = 1; i <= 100; i++) {
+            mediaData.push({
+                type: 'photo',
+                // কাস্টম টাইটেল দিতে চাইলে নিচের লাইনে নাম পরিবর্তন করতে পারো, যেমন: i === 1 ? 'আমাদের প্রথম ট্যুর' : `photo${i}`
+                title: `photo${i}`, 
+                url: `photos/photo${i}.jpg`
+            });
+        }
+
+        // ভিডিও ফাইল যোগ করার নিয়ম (এভাবে ভিডিও বাড়াতে পারো)
+        for (let i = 1; i <= 10; i++) {
+            mediaData.push({
+                type: 'video',
+                title: `video${i}`,
+                url: `videos/video${i}.mp4`
+            });
+        }
+
+        // অডিও ফাইল যোগ করার নিয়ম (এভাবে অডিও বাড়াতে পারো)
+        for (let i = 1; i <= 5; i++) {
+            mediaData.push({
+                type: 'audio',
+                title: `audio${i}`,
+                url: `audios/audio${i}.mp3`
+            });
+        }
+
+        // চাহিদা অনুযায়ী শেষের ফাইলগুলো উপরে দেখতে চাইলে অ্যারে রিভার্স করে নিচ্ছি
+        mediaData.reverse();
+
+        const grid = document.getElementById('galleryGrid');
+        const searchInput = document.getElementById('searchInput');
+        const tabButtons = document.querySelectorAll('.tab-btn');
+
+        let currentFilter = 'all';
+        let searchQuery = '';
+
+        // রেন্ডার ফাংশন
+        function renderGallery() {
+            grid.innerHTML = '';
+
+            // ফিল্টার এবং সার্চ লজিক
+            const filteredData = mediaData.filter(item => {
+                const matchesFilter = currentFilter === 'all' || item.type === currentFilter;
+                const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesFilter && matchesSearch;
+            });
+
+            if (filteredData.length === 0) {
+                grid.innerHTML = `<div class="no-result">কোনো মেমরি পাওয়া যায়নি!</div>`;
+                return;
+            }
+
+            filteredData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'media-card';
+
+                let mediaElement = '';
+                if (item.type === 'photo') {
+                    // loading="lazy" দিয়ে স্ক্রিনে আসার আগ পর্যন্ত লোড হওয়া আটকানো হয়েছে
+                    mediaElement = `<div class="media-container"><img src="${item.url}" alt="${item.title}" loading="lazy" onerror="this.parentElement.innerHTML='<span style=\'color:#ef4444;\'>ছবি পাওয়া যায়নি</span>'"></div>`;
+                } else if (item.type === 'video') {
+                    mediaElement = `<div class="media-container"><video controls preload="none"><source src="${item.url}" type="video/mp4">আপনার ব্রাউজার ভিডিও সাপোর্ট করে না।</video></div>`;
+                } else if (item.type === 'audio') {
+                    mediaElement = `<div class="media-container" style="height: 100px;"><audio controls preload="none"><source src="${item.url}" type="audio/mpeg">আপনার ব্রাউজার অডিও সাপোর্ট করে না।</audio></div>`;
+                }
+
+                card.innerHTML = `
+                    ${mediaElement}
+                    <div class="media-info">
+                        <div class="media-title">${item.title}</div>
+                        <span class="media-type-badge">${item.type}</span>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // ট্যাব ক্লিক হ্যান্ডলার
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                currentFilter = button.getAttribute('data-filter');
+                renderGallery();
+            });
+        });
+
+        // সার্চ ইনপুট হ্যান্ডলার
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value.trim();
+            renderGallery();
+        });
+
+        // প্রথমবার পেজ লোড হলে গ্যালারি রেন্ডার হবে
+        renderGallery();
+    </script>
+</body>
+</html>
