@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3 Idiots 2.0 — Memories Archive</title>
+    <style>
+        :root {
+            --bg-primary: #09090b;
+            --bg-secondary: #121215;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-card-hover: rgba(255, 255, 255, 0.07);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.24);
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --transition-speed: 0.36s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(255, 255, 255, 0.03), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.02), transparent 25%);
+        }
+
+        /* Welcome Overlay */
+        #welcome-screen {
+            position: fixed;
+            inset: 0;
+            background-color: var(--bg-primary);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.7s;
+        }
+
+        #welcome-screen.hidden-permanently { display: none; }
+        #welcome-screen.fade-out { opacity: 0; visibility: hidden; pointer-events: none; }
+
+        .welcome-logo {
+            width: 84px;
+            height: 84px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--border-hover);
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.06);
+        }
+
+        .version-badge {
+            font-size: 0.75rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-card);
+            padding: 0.3rem 0.85rem;
+            border-radius: 999px;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-title {
+            font-size: clamp(1.9rem, 4.5vw, 3.1rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.85rem;
+            background: linear-gradient(180deg, #ffffff 0%, #71717a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-subtitle {
+            color: var(--text-secondary);
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            max-width: 520px;
+            line-height: 1.65;
+            margin-bottom: 2.25rem;
+        }
+
+        .enter-btn {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-hover);
+            padding: 0.8rem 2.2rem;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .enter-btn:hover, .enter-btn:active {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+        }
+
+        .dont-show-label {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            margin-top: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .dont-show-label:hover { color: var(--text-primary); }
+
+        .dont-show-label input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 1px solid var(--border-hover);
+            border-radius: 4px;
+            background: var(--bg-card);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .dont-show-label input[type="checkbox"]:checked {
+            background: var(--text-primary);
+            border-color: var(--text-primary);
+        }
+
+        .dont-show-label input[type="checkbox"]:checked::after {
+            content: '';
+            position: absolute;
+            left: 4.5px;
+            top: 1.5px;
+            width: 4px;
+            height: 8px;
+            border: solid var(--bg-primary);
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        /* Header */
+        header {
+            width: 100%;
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 1.35rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-subtle);
+            position: sticky;
+            top: 0;
+            background: rgba(9, 9, 11, 0.85);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            cursor: pointer;
+        }
+
+        .brand img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--border-hover);
+        }
+
+        .brand span {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .nav-pill-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 0.5rem 1.1rem;
+            border-radius: 999px;
+            font-size: 0.86rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .nav-pill-btn:hover, .nav-pill-btn:active {
+            background: var(--bg-card-hover);
+            border-color: var(--border-hover);
+        }
+
+        .nav-pill-btn.hidden { display: none; }
+
+        /* Main Container & Smooth Fade-Out / Fade-In View Transitions */
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 2.5rem 2rem 4rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main.centered { justify-content: center; }
+
+        .view-section {
+            display: none;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity var(--transition-speed) cubic-bezier(0.16, 1, 0.3, 1),
+                        transform var(--transition-speed) cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .view-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .view-section.fading-out {
+            display: block;
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .section-header h2 {
+            font-size: clamp(1.55rem, 3.5vw, 2rem);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.45rem;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+        }
+
+        /* Home View Cards */
+        .home-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .mode-card {
+            position: relative;
+            overflow: hidden;
+            background: #101013;
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .mode-card:hover, .mode-card:active {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.75);
+        }
+
+        .mode-card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .mode-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1.2rem;
+            border-radius: 13px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+        }
+
+        .mode-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.45rem;
+            color: #ffffff;
+        }
+
+        .mode-card p {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+
+        /* Shared Low-Alpha Animated Background Layer for Mode & Timeline Cards */
+        .card-bg-layer {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .card-bg-slide {
+            position: absolute;
+            inset: -6%;
+            width: 112%;
+            height: 112%;
+            object-fit: cover;
+            opacity: 0;
+            filter: grayscale(20%) contrast(105%);
+            transform: scale(1);
+            transition: opacity 1.8s ease-in-out, transform 8s ease-out;
+        }
+
+        .card-bg-slide.active-slide {
+            opacity: 0.16;
+            transform: scale(1.08);
+        }
+
+        .mode-card:hover .card-bg-slide.active-slide,
+        .timeline-card:hover .card-bg-slide.active-slide {
+            opacity: 0.24;
+        }
+
+        .card-bg-layer::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(9, 9, 11, 0.52) 0%, rgba(9, 9, 11, 0.85) 100%);
+        }
+
+        /* Timelinewise Folder Grid */
+        .timeline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .timeline-card {
+            position: relative;
+            overflow: hidden;
+            background: #101013;
+            border: 1px solid var(--border-subtle);
+            border-radius: 18px;
+            padding: 1.65rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 155px;
+        }
+
+        .timeline-card:hover, .timeline-card:active {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 18px 36px -15px rgba(0, 0, 0, 0.8);
+        }
+
+        .timeline-card-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .timeline-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.65rem;
+        }
+
+        .timeline-badge {
+            font-size: 0.75rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.22rem 0.65rem;
+            border-radius: 999px;
+        }
+
+        .timeline-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            margin-bottom: 0.35rem;
+            color: #ffffff;
+        }
+
+        .timeline-desc {
+            font-size: 0.83rem;
+            color: var(--text-secondary);
+            line-height: 1.45;
+        }
+
+        /* Media Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 1rem;
+        }
+
+        .media-card {
+            position: relative;
+            aspect-ratio: 4 / 3;
+            background: #121216;
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.28s ease, border-color 0.28s ease;
+        }
+
+        .media-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--border-hover);
+        }
+
+        .media-thumb {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.45s ease, transform 0.4s ease;
+            display: block;
+        }
+
+        .media-thumb.loaded { opacity: 1; }
+
+        .media-card:hover .media-thumb.loaded { transform: scale(1.03); }
+
+        .media-skeleton {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, #121216 25%, #1a1a20 50%, #121216 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            z-index: 0;
+        }
+
+        .media-thumb.loaded + .media-skeleton { display: none; }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .video-badge {
+            position: absolute;
+            top: 0.65rem;
+            right: 0.65rem;
+            z-index: 2;
+            background: rgba(9, 9, 11, 0.78);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            color: #fff;
+            padding: 0.28rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .media-caption-bar {
+            position: absolute;
+            inset-inline: 0;
+            bottom: 0;
+            z-index: 2;
+            padding: 1.5rem 0.75rem 0.65rem;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+            pointer-events: none;
+        }
+
+        .media-caption-bar h4 {
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: #f4f4f5;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #scroll-sentinel {
+            width: 100%;
+            height: 30px;
+            margin-top: 1.5rem;
+        }
+
+        /* Fullscreen Lightbox Modal */
+        .lightbox-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 5, 7, 0.94);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            z-index: 1100;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .lightbox-backdrop.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            z-index: 2;
+        }
+
+        .lightbox-counter {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .lightbox-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        .lb-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: var(--text-primary);
+            padding: 0.48rem 0.95rem;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lb-btn:hover {
+            background: rgba(255, 255, 255, 0.16);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .lb-btn-icon { padding: 0.48rem; }
+
+        .lightbox-stage {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 3.5rem;
+            overflow: hidden;
+        }
+
+        .lightbox-stage img,
+        .lightbox-stage video {
+            max-width: 100%;
+            max-height: 76vh;
+            border-radius: 10px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85);
+            object-fit: contain;
+        }
+
+        .lb-nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 3;
+        }
+
+        .lb-nav-arrow:hover { background: rgba(255, 255, 255, 0.18); }
+        .lb-prev { left: 1rem; }
+        .lb-next { right: 1rem; }
+
+        .lightbox-footer {
+            text-align: center;
+            padding: 0.85rem 1.5rem 1.25rem;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .lightbox-footer h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .lightbox-footer p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Personwise View */
+        .person-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.15rem;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .person-card {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 18px;
+            padding: 1.25rem 1.75rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .person-card:hover, .person-card:active {
+            background: var(--bg-card-hover);
+            border-color: var(--border-hover);
+            transform: translateX(6px);
+        }
+
+        .person-avatar {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border-hover);
+            flex-shrink: 0;
+            background-color: #18181b;
+        }
+
+        .person-info h3 {
+            font-size: 1.18rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .person-info span {
+            font-size: 0.86rem;
+            color: var(--text-secondary);
+        }
+
+        .person-arrow {
+            margin-left: auto;
+            color: var(--text-secondary);
+        }
+
+        /* About Modal Popup */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.78);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 900;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.25rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+
+        .modal-backdrop.open { opacity: 1; visibility: visible; }
+
+        .modal-card {
+            background: #111114;
+            border: 1px solid var(--border-hover);
+            border-radius: 24px;
+            max-width: 540px;
+            width: 100%;
+            padding: 2.25rem 2rem;
+            position: relative;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.85);
+            transform: scale(0.95) translateY(10px);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-backdrop.open .modal-card { transform: scale(1) translateY(0); }
+
+        .modal-close {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        .about-profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border-hover);
+            margin-bottom: 1rem;
+        }
+
+        .about-profile h3 { font-size: 1.35rem; font-weight: 700; margin-bottom: 0.25rem; }
+
+        .about-role {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+        }
+
+        .about-body {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            line-height: 1.7;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .about-body p strong { color: var(--text-primary); font-weight: 600; }
+
+        .about-highlights {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            padding: 1rem 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+        }
+
+        .about-highlights div {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            padding-bottom: 0.45rem;
+        }
+
+        .about-highlights div:last-child { border-bottom: none; padding-bottom: 0; }
+        .about-highlights span:last-child { color: var(--text-primary); font-weight: 500; }
+
+        @media (max-width: 640px) {
+            header { padding: 1rem 1.25rem; }
+            main { padding: 1.75rem 1.25rem 3rem; }
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+            .lightbox-stage { padding: 0.75rem; }
+            .lb-nav-arrow { width: 32px; height: 32px; }
+            .lb-prev { left: 0.4rem; }
+            .lb-next { right: 0.4rem; }
+            .person-card { padding: 1rem 1.25rem; gap: 1rem; }
+            .person-avatar { width: 56px; height: 56px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Welcome Screen Overlay -->
+    <div id="welcome-screen">
+        <img src="logo.jpg" alt="3 Idiots Logo" class="welcome-logo" onerror="this.style.display='none'">
+        <div class="version-badge">Major Release • 2026</div>
+        <h1 class="welcome-title">Welcome to 3 Idiots 2.0</h1>
+        <p class="welcome-subtitle">
+            A private digital archive of our brotherhood and shared memories. Version 2.0 brings a lot of newness—featuring a refined dark interface, smoother transitions, and organized ways to explore every moment.
+        </p>
+        <button class="enter-btn" onclick="dismissWelcome()">Enter Archive</button>
+        
+        <label class="dont-show-label">
+            <input type="checkbox" id="dont-show-checkbox">
+            <span>Don't show again</span>
+        </label>
+    </div>
+
+    <!-- Top Navigation Bar -->
+    <header>
+        <div class="brand" onclick="goHome()">
+            <img src="logo.jpg" alt="3 Idiots" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22><rect width=%2240%22 height=%2240%22 fill=%22%2327272a%22/></svg>'">
+            <span>3 Idiots</span>
+        </div>
+
+        <div class="header-actions">
+            <!-- About Button (Visible on Home Screen) -->
+            <button id="about-btn" class="nav-pill-btn" onclick="openAboutModal()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="16" x2="12" y2="12"/>
+                    <line x1="12" y1="8" x2="12.01" y2="8"/>
+                </svg>
+                About
+            </button>
+
+            <!-- Back Button (Visible on Sub-views) -->
+            <button id="back-btn" class="nav-pill-btn hidden" onclick="handleBack()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="main-container" class="centered">
+        <!-- 1. Home View -->
+        <section id="home-view" class="view-section active">
+            <div class="section-header">
+                <h2>Explore Memories</h2>
+                <p>Choose how you want to revisit our journey</p>
+            </div>
+
+            <div class="home-grid">
+                <!-- Timelinewise Mode Card with Random Folder Background Slideshow -->
+                <div id="home-timeline-card" class="mode-card" onclick="openView('timeline-view')">
+                    <div id="home-timeline-bg" class="card-bg-layer"></div>
+                    <div class="mode-card-content">
+                        <div class="mode-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                        </div>
+                        <h3>Timelinewise</h3>
+                        <p>Browse photos and videos organized chronologically across different chapters and years.</p>
+                    </div>
+                </div>
+
+                <!-- Personwise Mode Card -->
+                <div class="mode-card" onclick="openView('person-view')">
+                    <div class="mode-card-content">
+                        <div class="mode-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <h3>Personwise</h3>
+                        <p>Filter memories dedicated to each of the three brothers individually.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Timelinewise Folder List View -->
+        <section id="timeline-view" class="view-section">
+            <div class="section-header">
+                <h2>Timeline Archive</h2>
+                <p>Select a chapter to explore captured photos & videos</p>
+            </div>
+
+            <div id="timeline-grid" class="timeline-grid"></div>
+        </section>
+
+        <!-- 3. Folder Gallery View -->
+        <section id="gallery-view" class="view-section">
+            <div class="section-header">
+                <h2 id="gallery-title">Folder Name</h2>
+                <p id="gallery-subtitle">0 items</p>
+            </div>
+
+            <div id="gallery-grid" class="gallery-grid"></div>
+            <div id="scroll-sentinel"></div>
+        </section>
+
+        <!-- 4. Personwise View -->
+        <section id="person-view" class="view-section">
+            <div class="section-header">
+                <h2>The Trio</h2>
+                <p>Select a profile to view personal highlights</p>
+            </div>
+
+            <div class="person-list">
+                <div class="person-card">
+                    <img src="jubayer.jpg" alt="Jubayer Talukdar" class="person-avatar" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2272%22 height=%2272%22><rect width=%2272%22 height=%2272%22 fill=%22%2327272a%22/><text x=%2250%25%22 y=%2255%25%22 font-size=%2224%22 fill=%22%23a1a1aa%22 text-anchor=%22middle%22>J</text></svg>'">
+                    <div class="person-info">
+                        <h3>Jubayer Talukdar</h3>
+                        <span>View photos & videos</span>
+                    </div>
+                    <div class="person-arrow">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="person-card">
+                    <img src="shahin.jpg" alt="Shahin Alom" class="person-avatar" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2272%22 height=%2272%22><rect width=%2272%22 height=%2272%22 fill=%22%2327272a%22/><text x=%2250%25%22 y=%2255%25%22 font-size=%2224%22 fill=%22%23a1a1aa%22 text-anchor=%22middle%22>S</text></svg>'">
+                    <div class="person-info">
+                        <h3>Shahin Alom</h3>
+                        <span>View photos & videos</span>
+                    </div>
+                    <div class="person-arrow">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="person-card">
+                    <img src="rahul.jpg" alt="Rahul Ahmed" class="person-avatar" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2272%22 height=%2272%22><rect width=%2272%22 height=%2272%22 fill=%22%2327272a%22/><text x=%2250%25%22 y=%2255%25%22 font-size=%2224%22 fill=%22%23a1a1aa%22 text-anchor=%22middle%22>R</text></svg>'">
+                    <div class="person-info">
+                        <h3>Rahul Ahmed</h3>
+                        <span>View photos & videos</span>
+                    </div>
+                    <div class="person-arrow">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Fullscreen Media Lightbox (Photos & Videos + Download) -->
+    <div id="lightbox-modal" class="lightbox-backdrop" onclick="closeLightboxOnBackdrop(event)">
+        <div class="lightbox-topbar">
+            <span id="lb-counter" class="lightbox-counter">1 / 1</span>
+            <div class="lightbox-controls">
+                <a id="lb-download-btn" class="lb-btn" href="#" download>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download
+                </a>
+                <button class="lb-btn lb-btn-icon" onclick="closeLightbox()" aria-label="Close">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="lightbox-stage">
+            <button class="lb-nav-arrow lb-prev" onclick="stepLightbox(-1)" aria-label="Previous">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"/>
+                </svg>
+            </button>
+
+            <div id="lb-media-container"></div>
+
+            <button class="lb-nav-arrow lb-next" onclick="stepLightbox(1)" aria-label="Next">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="lightbox-footer">
+            <h3 id="lb-title"></h3>
+            <p id="lb-desc"></p>
+        </div>
+    </div>
+
+    <!-- About Popup Modal -->
+    <div id="about-modal" class="modal-backdrop" onclick="closeAboutOnBackdrop(event)">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeAboutModal()" aria-label="Close">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+
+            <div class="about-profile">
+                <img src="jubayer.jpg" alt="Jubayer Talukdar" class="about-avatar" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2292%22 height=%2292%22><rect width=%2292%22 height=%2292%22 fill=%22%2327272a%22/><text x=%2250%25%22 y=%2255%25%22 font-size=%2228%22 fill=%22%23a1a1aa%22 text-anchor=%22middle%22>J</text></svg>'">
+                <h3>Jubayer Talukdar</h3>
+                <span class="about-role">Creator & Maintainer • 3 Idiots Archive</span>
+            </div>
+
+            <div class="about-body">
+                <p>
+                    <strong>3 Idiots</strong> is a personal digital archive preserving the photos, videos, and shared moments of three close friends—<strong>Jubayer Talukdar</strong>, <strong>Shahin Alom</strong>, and <strong>Rahul Ahmed</strong>.
+                </p>
+                <p>
+                    The initial version of this website was built in <strong>early 2026</strong>, and later in <strong>November 2026</strong>, the upgraded <strong>2.0</strong> release was launched with a cleaner dark UI, smooth fade transitions, and structured browsing modes. I personally build and maintain the archive and its ongoing updates.
+                </p>
+
+                <div class="about-highlights">
+                    <div>
+                        <span>Initial Version</span>
+                        <span>Early 2026</span>
+                    </div>
+                    <div>
+                        <span>Version 2.0 Launch</span>
+                        <span>November 2026</span>
+                    </div>
+                    <div>
+                        <span>New in 2.0</span>
+                        <span>Dark UI, Welcome Modal, Timeline & Person Views</span>
+                    </div>
+                    <div>
+                        <span>Maintained By</span>
+                        <span>Jubayer Talukdar</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* =====================================================================
+           EASY CONFIGURATION: Add new folders, update photo counts, or add
+           custom Title & Description for specific photos/videos right here.
+           ===================================================================== */
+        const TIMELINE_DATA = [
+            {
+                title: "Photos from 2026",
+                folder: "Photos from 2026",
+                subtitle: "Latest captures from 2026",
+                photoCount: 1,
+                videos: [],
+                details: {}
+            },
+            {
+                title: "Photos from 2025",
+                folder: "Photos from 2025",
+                subtitle: "Moments throughout 2025",
+                photoCount: 14,
+                videos: [],
+                details: {}
+            },
+            {
+                title: "Eid 2025",
+                folder: "Eid 2025",
+                subtitle: "Festive days & brotherhood",
+                photoCount: 332,
+                videos: [],
+                details: {}
+            },
+            {
+                title: "Photos from 2024",
+                folder: "Photos from 2024",
+                subtitle: "Everyday memories of 2024",
+                photoCount: 40,
+                videos: [],
+                details: {}
+            },
+            {
+                title: "Study tour 2024",
+                folder: "Study tour 2024",
+                subtitle: "College excursion & road stories",
+                photoCount: 76,
+                videos: [],
+                details: {}
+            },
+            {
+                title: "Rail line 2024",
+                folder: "Rail line  2024",
+                subtitle: "Tracks, walks & evening talks",
+                photoCount: 109,
+                videos: [],
+                details: {}
+            },
+            {
+                title: "Photos from 2023",
+                folder: "Photos from 2023",
+                subtitle: "Snapshots from 2023",
+                photoCount: 146,
+                videos: [],
+                details: {}
+            },
+            {
+                title: "Class party 2023",
+                folder: "Class party 2023",
+                subtitle: "Celebration clip & highlights",
+                photoCount: 0,
+                videos: [
+                    { file: "video (1).mp4", title: "Class Party 2023", desc: "Recorded celebration memory" }
+                ],
+                details: {}
+            },
+            {
+                title: "Study tour 2023",
+                folder: "Study tour 2023",
+                subtitle: "Trip memories from 2023",
+                photoCount: 38,
+                videos: [],
+                details: {}
+            },
+            {
+                title: "Photos from 2022",
+                folder: "Photos from 2022",
+                subtitle: "Throwbacks from 2022",
+                photoCount: 74,
+                videos: [],
+                details: {}
+            },
+            {
+                title: "Photos from 2021",
+                folder: "Photos from 2021",
+                subtitle: "Captured moments of 2021",
+                photoCount: 11,
+                videos: [],
+                details: {}
+            },
+            {
+                title: "Class party 2019",
+                folder: "Class party 2019",
+                subtitle: "Old school celebration days",
+                photoCount: 42,
+                videos: [],
+                details: {}
+            },
+            {
+                title: "School Zone",
+                folder: "School Zone",
+                subtitle: "Where everything began",
+                photoCount: 84,
+                videos: [],
+                details: {}
+            }
+        ];
+
+        /* =====================================================================
+           WELCOME SCREEN & ABOUT MODAL LOGIC
+           ===================================================================== */
+        const STORAGE_KEY = '3idiots_v2_hide_welcome';
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const aboutModal = document.getElementById('about-modal');
+
+        if (localStorage.getItem(STORAGE_KEY) === 'true') {
+            welcomeScreen.classList.add('hidden-permanently');
+        }
+
+        function dismissWelcome() {
+            if (document.getElementById('dont-show-checkbox').checked) {
+                localStorage.setItem(STORAGE_KEY, 'true');
+            }
+            welcomeScreen.classList.add('fade-out');
+        }
+
+        function openAboutModal() { aboutModal.classList.add('open'); }
+        function closeAboutModal() { aboutModal.classList.remove('open'); }
+        function closeAboutOnBackdrop(e) { if (e.target === aboutModal) closeAboutModal(); }
+
+        /* =====================================================================
+           RELIABLE VIEW NAVIGATION & BACK BUTTON STACK
+           ===================================================================== */
+        let viewStack = ['home-view'];
+        let isTransitioning = false;
+
+        function getActiveViewId() {
+            const activeEl = document.querySelector('.view-section.active');
+            return activeEl ? activeEl.id : 'home-view';
+        }
+
+        function updateHeaderForView(viewId) {
+            const backBtn = document.getElementById('back-btn');
+            const aboutBtn = document.getElementById('about-btn');
+            const mainContainer = document.getElementById('main-container');
+
+            if (viewId === 'home-view') {
+                backBtn.classList.add('hidden');
+                aboutBtn.classList.remove('hidden');
+                mainContainer.classList.add('centered');
+            } else {
+                aboutBtn.classList.add('hidden');
+                backBtn.classList.remove('hidden');
+                mainContainer.classList.remove('centered');
+            }
+        }
+
+        function transitionToView(targetViewId) {
+            const currentViewId = getActiveViewId();
+            if (!targetViewId || currentViewId === targetViewId) {
+                updateHeaderForView(targetViewId || 'home-view');
+                return;
+            }
+
+            if (isTransitioning) {
+                // Force-complete any ongoing transition cleanly so Back never gets stuck
+                document.querySelectorAll('.view-section').forEach(sec => {
+                    sec.classList.remove('active', 'fading-out');
+                    sec.style.display = 'none';
+                });
+                const instantTarget = document.getElementById(targetViewId);
+                instantTarget.style.display = 'block';
+                void instantTarget.offsetWidth;
+                instantTarget.classList.add('active');
+                instantTarget.style.display = '';
+                updateHeaderForView(targetViewId);
+                isTransitioning = false;
+                return;
+            }
+
+            isTransitioning = true;
+            const currentView = document.getElementById(currentViewId);
+            const targetView = document.getElementById(targetViewId);
+
+            // Step 1: Fade out current view completely
+            currentView.classList.remove('active');
+            currentView.classList.add('fading-out');
+
+            // Update header controls right away
+            updateHeaderForView(targetViewId);
+
+            // Step 2: After fade-out completes, hide old view and fade in target view
+            setTimeout(() => {
+                currentView.classList.remove('fading-out');
+                currentView.style.display = 'none';
+
+                targetView.style.display = 'block';
+                void targetView.offsetWidth;
+                targetView.classList.add('active');
+                targetView.style.display = '';
+
+                window.scrollTo({ top: 0, behavior: 'instant' });
+                isTransitioning = false;
+            }, 350);
+        }
+
+        function openView(targetViewId) {
+            if (getActiveViewId() === targetViewId) return;
+            viewStack.push(targetViewId);
+            transitionToView(targetViewId);
+        }
+
+        function goHome() {
+            if (getActiveViewId() === 'home-view') return;
+            viewStack = ['home-view'];
+            transitionToView('home-view');
+        }
+
+        function handleBack() {
+            if (viewStack.length > 1) {
+                viewStack.pop();
+                const prevViewId = viewStack[viewStack.length - 1];
+                transitionToView(prevViewId);
+            } else {
+                viewStack = ['home-view'];
+                transitionToView('home-view');
+            }
+        }
+
+        /* =====================================================================
+           BACKGROUND PHOTO SLIDESHOWS (HOME TIMELINE CARD + TIMELINE FOLDERS)
+           ===================================================================== */
+        let bgSlideshowIntervals = [];
+
+        function attachSlideshowToContainer(container, chapter, staggerIndex = 0) {
+            const sampleCount = Math.min(chapter.photoCount, 4);
+            if (sampleCount <= 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            // Pick starting photo index so slides vary nicely
+            const maxStart = Math.max(1, chapter.photoCount - sampleCount + 1);
+            const startNum = Math.floor(Math.random() * maxStart) + 1;
+
+            let slidesHTML = '';
+            for (let i = 0; i < sampleCount; i++) {
+                const photoNum = ((startNum + i - 1) % chapter.photoCount) + 1;
+                const src = encodeURI(`timelinewise/${chapter.folder}/photo (${photoNum}).jpg`);
+                slidesHTML += `<img class="card-bg-slide ${i === 0 ? 'active-slide' : ''}" src="${src}" loading="lazy" alt="" onerror="this.remove()">`;
+            }
+            container.innerHTML = slidesHTML;
+
+            if (sampleCount > 1) {
+                let currentSlide = 0;
+                const interval = setInterval(() => {
+                    const slides = container.querySelectorAll('.card-bg-slide');
+                    if (slides.length <= 1) return;
+                    slides[currentSlide].classList.remove('active-slide');
+                    currentSlide = (currentSlide + 1) % slides.length;
+                    slides[currentSlide].classList.add('active-slide');
+                }, 4200 + (staggerIndex * 350));
+                bgSlideshowIntervals.push(interval);
+            }
+        }
+
+        function initHomeTimelineSlideshow() {
+            const homeBg = document.getElementById('home-timeline-bg');
+            const chaptersWithPhotos = TIMELINE_DATA.filter(ch => ch.photoCount > 0);
+            if (chaptersWithPhotos.length === 0) return;
+
+            const randomChapter = chaptersWithPhotos[Math.floor(Math.random() * chaptersWithPhotos.length)];
+            attachSlideshowToContainer(homeBg, randomChapter, 0);
+        }
+
+        function renderTimelineCards() {
+            const grid = document.getElementById('timeline-grid');
+            grid.innerHTML = '';
+
+            bgSlideshowIntervals.forEach(clearInterval);
+            bgSlideshowIntervals = [];
+
+            // Re-attach home timeline card random slideshow
+            initHomeTimelineSlideshow();
+
+            TIMELINE_DATA.forEach((chapter, idx) => {
+                const totalItems = chapter.photoCount + chapter.videos.length;
+                const countLabel = chapter.videos.length > 0 && chapter.photoCount === 0
+                    ? `${chapter.videos.length} Video`
+                    : `${totalItems} ${totalItems === 1 ? 'Photo' : 'Photos'}`;
+
+                const card = document.createElement('div');
+                card.className = 'timeline-card';
+                card.onclick = () => openTimelineFolder(idx);
+
+                card.innerHTML = `
+                    <div class="card-bg-layer"></div>
+                    <div class="timeline-card-content">
+                        <div>
+                            <div class="timeline-meta">
+                                <span class="timeline-badge">${countLabel}</span>
+                            </div>
+                            <div class="timeline-title">${chapter.title}</div>
+                        </div>
+                        <div class="timeline-desc">${chapter.subtitle}</div>
+                    </div>
+                `;
+
+                const bgLayer = card.querySelector('.card-bg-layer');
+                attachSlideshowToContainer(bgLayer, chapter, idx + 1);
+
+                grid.appendChild(card);
+            });
+        }
+
+        /* =====================================================================
+           LAZY BATCH GALLERY LOADER (ZERO-LAG FOR 300+ ITEMS)
+           ===================================================================== */
+        let activeMediaList = [];
+        let renderedCount = 0;
+        const BATCH_SIZE = 24;
+
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const img = entry.target;
+                if (img.dataset.src) {
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                }
+                observer.unobserve(img);
+            });
+        }, { rootMargin: '250px 0px' });
+
+        const sentinelObserver = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting && renderedCount < activeMediaList.length) {
+                appendMediaBatch();
+            }
+        }, { rootMargin: '350px 0px' });
+
+        sentinelObserver.observe(document.getElementById('scroll-sentinel'));
+
+        function openTimelineFolder(chapterIndex) {
+            const chapter = TIMELINE_DATA[chapterIndex];
+            activeMediaList = [];
+            renderedCount = 0;
+
+            chapter.videos.forEach(vid => {
+                activeMediaList.push({
+                    type: 'video',
+                    src: encodeURI(`timelinewise/${chapter.folder}/${vid.file}`),
+                    fileName: vid.file,
+                    title: vid.title || vid.file,
+                    desc: vid.desc || chapter.title
+                });
+            });
+
+            for (let i = 1; i <= chapter.photoCount; i++) {
+                const fileName = `photo (${i}).jpg`;
+                const meta = chapter.details[fileName] || {};
+                activeMediaList.push({
+                    type: 'photo',
+                    src: encodeURI(`timelinewise/${chapter.folder}/${fileName}`),
+                    fileName: fileName,
+                    title: meta.title || "",
+                    desc: meta.desc || ""
+                });
+            }
+
+            document.getElementById('gallery-title').textContent = chapter.title;
+            document.getElementById('gallery-subtitle').textContent =
+                `${chapter.subtitle} • ${activeMediaList.length} ${activeMediaList.length === 1 ? 'item' : 'items'}`;
+
+            const galleryGrid = document.getElementById('gallery-grid');
+            galleryGrid.innerHTML = '';
+
+            appendMediaBatch();
+            openView('gallery-view');
+        }
+
+        function appendMediaBatch() {
+            const galleryGrid = document.getElementById('gallery-grid');
+            const fragment = document.createDocumentFragment();
+            const nextLimit = Math.min(renderedCount + BATCH_SIZE, activeMediaList.length);
+
+            for (let i = renderedCount; i < nextLimit; i++) {
+                const item = activeMediaList[i];
+                const card = document.createElement('div');
+                card.className = 'media-card';
+                card.onclick = () => openLightbox(i);
+
+                if (item.type === 'video') {
+                    card.innerHTML = `
+                        <video class="media-thumb loaded" src="${item.src}#t=0.5" preload="metadata" muted playsinline></video>
+                        <div class="video-badge">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                            Video
+                        </div>
+                        ${item.title ? `<div class="media-caption-bar"><h4>${item.title}</h4></div>` : ''}
+                    `;
+                } else {
+                    const img = document.createElement('img');
+                    img.className = 'media-thumb';
+                    img.dataset.src = item.src;
+                    img.alt = item.title || item.fileName;
+                    img.onload = () => img.classList.add('loaded');
+
+                    const skeleton = document.createElement('div');
+                    skeleton.className = 'media-skeleton';
+
+                    card.appendChild(img);
+                    card.appendChild(skeleton);
+
+                    if (item.title) {
+                        const caption = document.createElement('div');
+                        caption.className = 'media-caption-bar';
+                        caption.innerHTML = `<h4>${item.title}</h4>`;
+                        card.appendChild(caption);
+                    }
+
+                    imageObserver.observe(img);
+                }
+
+                fragment.appendChild(card);
+            }
+
+            galleryGrid.appendChild(fragment);
+            renderedCount = nextLimit;
+        }
+
+        /* =====================================================================
+           FULLSCREEN LIGHTBOX (PHOTO & VIDEO VIEWER + DOWNLOAD)
+           ===================================================================== */
+        const lightboxModal = document.getElementById('lightbox-modal');
+        let currentLightboxIndex = 0;
+
+        function openLightbox(index) {
+            currentLightboxIndex = index;
+            updateLightboxContent();
+            lightboxModal.classList.add('open');
+        }
+
+        function closeLightbox() {
+            lightboxModal.classList.remove('open');
+            const activeVideo = document.querySelector('#lb-media-container video');
+            if (activeVideo) activeVideo.pause();
+        }
+
+        function closeLightboxOnBackdrop(e) {
+            if (e.target === lightboxModal || e.target.classList.contains('lightbox-stage')) {
+                closeLightbox();
+            }
+        }
+
+        function stepLightbox(direction) {
+            if (activeMediaList.length <= 1) return;
+            currentLightboxIndex = (currentLightboxIndex + direction + activeMediaList.length) % activeMediaList.length;
+            updateLightboxContent();
+        }
+
+        function updateLightboxContent() {
+            const item = activeMediaList[currentLightboxIndex];
+            const container = document.getElementById('lb-media-container');
+            const downloadBtn = document.getElementById('lb-download-btn');
+
+            document.getElementById('lb-counter').textContent =
+                `${currentLightboxIndex + 1} / ${activeMediaList.length}`;
+
+            downloadBtn.href = item.src;
+            downloadBtn.setAttribute('download', item.fileName);
+
+            if (item.type === 'video') {
+                container.innerHTML = `<video src="${item.src}" controls autoplay playsinline></video>`;
+            } else {
+                container.innerHTML = `<img src="${item.src}" alt="${item.title || item.fileName}">`;
+            }
+
+            document.getElementById('lb-title').textContent = item.title || '';
+            document.getElementById('lb-desc').textContent = item.desc || '';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (lightboxModal.classList.contains('open')) {
+                if (e.key === 'Escape') closeLightbox();
+                if (e.key === 'ArrowRight') stepLightbox(1);
+                if (e.key === 'ArrowLeft') stepLightbox(-1);
+            } else if (e.key === 'Escape' && aboutModal.classList.contains('open')) {
+                closeAboutModal();
+            }
+        });
+
+        renderTimelineCards();
+    </script>
+</body>
+</html>
