@@ -15,13 +15,14 @@
             --text-primary: #f4f4f5;
             --text-secondary: #a1a1aa;
             --transition-speed: 0.36s;
+            --font-modern: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: var(--font-modern);
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -274,68 +275,77 @@
             font-size: 0.92rem;
         }
 
-        /* Home View Cards */
+        /* Home View Cards (2x2 Modern Grid) */
         .home-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            max-width: 800px;
+            grid-template-columns: repeat(2, minmax(260px, 1fr));
+            gap: 1.35rem;
+            max-width: 780px;
             margin: 0 auto;
         }
 
         .mode-card {
             position: relative;
             overflow: hidden;
-            background: #101013;
+            background: #101014;
             border: 1px solid var(--border-subtle);
-            border-radius: 20px;
-            padding: 2.5rem 2rem;
+            border-radius: 22px;
+            padding: 2.25rem 1.75rem;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            min-height: 175px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.32s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .mode-card:hover, .mode-card:active {
             border-color: var(--border-hover);
             transform: translateY(-4px);
-            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.75);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8);
         }
 
         .mode-card-content {
             position: relative;
             z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.9rem;
         }
 
         .mode-icon {
-            width: 48px;
-            height: 48px;
-            margin: 0 auto 1.2rem;
-            border-radius: 13px;
-            background: rgba(9, 9, 11, 0.65);
-            border: 1px solid rgba(255, 255, 255, 0.14);
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: rgba(9, 9, 11, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.16);
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--text-primary);
-            backdrop-filter: blur(6px);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
         }
 
-        .mode-card h3 {
-            font-size: 1.3rem;
+        .mode-title-modern {
+            font-size: 1.38rem;
             font-weight: 600;
-            margin-bottom: 0.45rem;
+            letter-spacing: -0.025em;
             color: #ffffff;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+            text-shadow: 0 2px 14px rgba(0, 0, 0, 0.92);
         }
 
-        .mode-card p {
+        .mode-card-sub {
+            font-size: 0.84rem;
+            font-weight: 400;
+            letter-spacing: -0.005em;
             color: #d4d4d8;
-            font-size: 0.88rem;
-            line-height: 1.5;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.92);
         }
 
-        /* Shared 40% Opacity Animated Background Layer for Mode & Timeline Cards */
+        /* Shared 50% Opacity Animated Background Layer for Cards */
         .card-bg-layer {
             position: absolute;
             inset: 0;
@@ -351,29 +361,29 @@
             height: 112%;
             object-fit: cover;
             opacity: 0;
-            filter: grayscale(15%) contrast(105%);
+            filter: grayscale(10%) contrast(105%);
             transform: scale(1);
             transition: opacity 1.8s ease-in-out, transform 8s ease-out;
         }
 
         .card-bg-slide.active-slide {
-            opacity: 0.4;
+            opacity: 0.5;
             transform: scale(1.08);
         }
 
         .mode-card:hover .card-bg-slide.active-slide,
         .timeline-card:hover .card-bg-slide.active-slide {
-            opacity: 0.4;
+            opacity: 0.5;
         }
 
         .card-bg-layer::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, rgba(9, 9, 11, 0.42) 0%, rgba(9, 9, 11, 0.78) 100%);
+            background: linear-gradient(180deg, rgba(9, 9, 11, 0.35) 0%, rgba(9, 9, 11, 0.76) 100%);
         }
 
-        /* Timelinewise Folder Grid */
+        /* Timelinewise & Personwise Folder Grid */
         .timeline-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -421,8 +431,8 @@
             font-size: 0.75rem;
             letter-spacing: 0.06em;
             text-transform: uppercase;
-            color: #e4e4e7;
-            background: rgba(9, 9, 11, 0.65);
+            color: #f4f4f5;
+            background: rgba(9, 9, 11, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.14);
             padding: 0.22rem 0.65rem;
             border-radius: 999px;
@@ -435,14 +445,74 @@
             letter-spacing: -0.01em;
             margin-bottom: 0.35rem;
             color: #ffffff;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
         }
 
         .timeline-desc {
             font-size: 0.83rem;
-            color: #d4d4d8;
+            color: #e4e4e7;
             line-height: 1.45;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
+        }
+
+        /* Personwise List View */
+        .person-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.15rem;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .person-card {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 18px;
+            padding: 1.25rem 1.75rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .person-card:hover, .person-card:active {
+            background: var(--bg-card-hover);
+            border-color: var(--border-hover);
+            transform: translateX(6px);
+        }
+
+        .person-avatar {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border-hover);
+            flex-shrink: 0;
+            background-color: #18181b;
+        }
+
+        .person-info h3 {
+            font-size: 1.18rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            letter-spacing: -0.015em;
+        }
+
+        .person-info span {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .person-arrow {
+            margin-left: auto;
+            color: var(--text-secondary);
+            transition: transform 0.3s ease;
+        }
+
+        .person-card:hover .person-arrow {
+            transform: translateX(4px);
+            color: var(--text-primary);
         }
 
         /* Media Gallery Grid */
@@ -461,6 +531,9 @@
             overflow: hidden;
             cursor: pointer;
             transition: transform 0.28s ease, border-color 0.28s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .media-card:hover {
@@ -490,11 +563,40 @@
             z-index: 0;
         }
 
-        .media-thumb.loaded + .media-skeleton { display: none; }
+        .media-card.is-loaded .media-skeleton,
+        .media-card.is-missing .media-skeleton {
+            display: none;
+        }
 
         @keyframes shimmer {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
+        }
+
+        /* Missing File ("photo not found") State */
+        .media-card.is-missing {
+            background: #111115;
+            border-style: dashed;
+            border-color: rgba(255, 255, 255, 0.14);
+        }
+
+        .not-found-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 1rem;
+            text-align: center;
+            color: var(--text-secondary);
+            z-index: 1;
+            margin-bottom: 0.75rem;
+        }
+
+        .not-found-box span {
+            font-size: 0.78rem;
+            letter-spacing: 0.04em;
+            color: #a1a1aa;
         }
 
         .video-badge {
@@ -519,18 +621,30 @@
             inset-inline: 0;
             bottom: 0;
             z-index: 2;
-            padding: 1.5rem 0.75rem 0.65rem;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+            padding: 1.25rem 0.65rem 0.45rem;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.88), rgba(0, 0, 0, 0.35) 65%, transparent);
             pointer-events: none;
         }
 
-        .media-caption-bar h4 {
-            font-size: 0.82rem;
+        .media-filename {
+            font-size: 0.72rem;
             font-weight: 500;
-            color: #f4f4f5;
+            color: #e4e4e7;
+            letter-spacing: 0.01em;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            line-height: 1.25;
+        }
+
+        .media-custom-title {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 0.1rem;
         }
 
         #scroll-sentinel {
@@ -599,6 +713,11 @@
             border-color: rgba(255, 255, 255, 0.3);
         }
 
+        .lb-btn.disabled-link {
+            opacity: 0.35;
+            pointer-events: none;
+        }
+
         .lb-btn-icon { padding: 0.48rem; }
 
         .lightbox-stage {
@@ -618,6 +737,15 @@
             border-radius: 10px;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85);
             object-fit: contain;
+        }
+
+        .lb-missing-placeholder {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 2rem;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.02);
         }
 
         .lb-nav-arrow {
@@ -657,59 +785,6 @@
 
         .lightbox-footer p {
             font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        /* Personwise View */
-        .person-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1.15rem;
-            max-width: 650px;
-            margin: 0 auto;
-        }
-
-        .person-card {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 18px;
-            padding: 1.25rem 1.75rem;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .person-card:hover, .person-card:active {
-            background: var(--bg-card-hover);
-            border-color: var(--border-hover);
-            transform: translateX(6px);
-        }
-
-        .person-avatar {
-            width: 68px;
-            height: 68px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--border-hover);
-            flex-shrink: 0;
-            background-color: #18181b;
-        }
-
-        .person-info h3 {
-            font-size: 1.18rem;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        .person-info span {
-            font-size: 0.86rem;
-            color: var(--text-secondary);
-        }
-
-        .person-arrow {
-            margin-left: auto;
             color: var(--text-secondary);
         }
 
@@ -833,6 +908,14 @@
         @media (max-width: 640px) {
             header { padding: 1rem 1.25rem; }
             main { padding: 1.75rem 1.25rem 3rem; }
+            .home-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .mode-card {
+                min-height: 145px;
+                padding: 1.75rem 1.25rem;
+            }
             .gallery-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.75rem;
@@ -894,16 +977,16 @@
 
     <!-- Main Content Area -->
     <main id="main-container" class="centered">
-        <!-- 1. Home View -->
+        <!-- 1. Home View (2x2 Grid: Timeline, Person, Unspecified Photos, Unspecified Videos) -->
         <section id="home-view" class="view-section active">
             <div class="section-header">
                 <h2>Explore Memories</h2>
-                <p>Choose how you want to revisit our journey</p>
+                <p>Select a category to revisit our journey</p>
             </div>
 
             <div class="home-grid">
-                <!-- Timelinewise Mode Card with Random Folder Background Slideshow -->
-                <div id="home-timeline-card" class="mode-card" onclick="openView('timeline-view')">
+                <!-- 1. Timeline -->
+                <div class="mode-card" onclick="openView('timeline-view')">
                     <div id="home-timeline-bg" class="card-bg-layer"></div>
                     <div class="mode-card-content">
                         <div class="mode-icon">
@@ -912,13 +995,13 @@
                                 <polyline points="12 6 12 12 16 14"/>
                             </svg>
                         </div>
-                        <h3>Timelinewise</h3>
-                        <p>Browse photos and videos organized chronologically across different chapters and years.</p>
+                        <div class="mode-title-modern">Timeline</div>
                     </div>
                 </div>
 
-                <!-- Personwise Mode Card -->
+                <!-- 2. Person -->
                 <div class="mode-card" onclick="openView('person-view')">
+                    <div id="home-person-bg" class="card-bg-layer"></div>
                     <div class="mode-card-content">
                         <div class="mode-icon">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -928,24 +1011,64 @@
                                 <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                             </svg>
                         </div>
-                        <h3>Personwise</h3>
-                        <p>Filter memories dedicated to each of the three brothers individually.</p>
+                        <div class="mode-title-modern">Person</div>
+                    </div>
+                </div>
+
+                <!-- 3. Unspecified Photos -->
+                <div class="mode-card" onclick="openUnspecifiedPhotos()">
+                    <div id="home-unspec-photo-bg" class="card-bg-layer"></div>
+                    <div class="mode-card-content">
+                        <div class="mode-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <polyline points="21 15 16 10 5 21"/>
+                            </svg>
+                        </div>
+                        <div class="mode-title-modern">Unspecified Photos</div>
+                        <div class="mode-card-sub">175 Photos</div>
+                    </div>
+                </div>
+
+                <!-- 4. Unspecified Videos -->
+                <div class="mode-card" onclick="openUnspecifiedVideos()">
+                    <div id="home-unspec-video-bg" class="card-bg-layer"></div>
+                    <div class="mode-card-content">
+                        <div class="mode-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="23 7 16 12 23 17 23 7"/>
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                            </svg>
+                        </div>
+                        <div class="mode-title-modern">Unspecified Videos</div>
+                        <div class="mode-card-sub">10 Videos</div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 2. Timelinewise Folder List View -->
+        <!-- 2. Timeline Folder List View -->
         <section id="timeline-view" class="view-section">
             <div class="section-header">
-                <h2>Timeline Archive</h2>
+                <h2>Timeline</h2>
                 <p>Select a chapter to explore captured photos & videos</p>
             </div>
 
             <div id="timeline-grid" class="timeline-grid"></div>
         </section>
 
-        <!-- 3. Folder Gallery View -->
+        <!-- 3. Person List View -->
+        <section id="person-view" class="view-section">
+            <div class="section-header">
+                <h2>Person</h2>
+                <p>Select a profile to view personal memories</p>
+            </div>
+
+            <div id="person-list" class="person-list"></div>
+        </section>
+
+        <!-- 4. Shared Gallery View (Used for Timeline folders, Person folders, & Unspecified media) -->
         <section id="gallery-view" class="view-section">
             <div class="section-header">
                 <h2 id="gallery-title">Folder Name</h2>
@@ -954,55 +1077,6 @@
 
             <div id="gallery-grid" class="gallery-grid"></div>
             <div id="scroll-sentinel"></div>
-        </section>
-
-        <!-- 4. Personwise View -->
-        <section id="person-view" class="view-section">
-            <div class="section-header">
-                <h2>The Trio</h2>
-                <p>Select a profile to view personal highlights</p>
-            </div>
-
-            <div class="person-list">
-                <div class="person-card">
-                    <img src="jubayer.jpg" alt="Jubayer Talukdar" class="person-avatar" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2272%22 height=%2272%22><rect width=%2272%22 height=%2272%22 fill=%22%2327272a%22/><text x=%2250%25%22 y=%2255%25%22 font-size=%2224%22 fill=%22%23a1a1aa%22 text-anchor=%22middle%22>J</text></svg>'">
-                    <div class="person-info">
-                        <h3>Jubayer Talukdar</h3>
-                        <span>View photos & videos</span>
-                    </div>
-                    <div class="person-arrow">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="9 18 15 12 9 6"/>
-                        </svg>
-                    </div>
-                </div>
-
-                <div class="person-card">
-                    <img src="shahin.jpg" alt="Shahin Alom" class="person-avatar" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2272%22 height=%2272%22><rect width=%2272%22 height=%2272%22 fill=%22%2327272a%22/><text x=%2250%25%22 y=%2255%25%22 font-size=%2224%22 fill=%22%23a1a1aa%22 text-anchor=%22middle%22>S</text></svg>'">
-                    <div class="person-info">
-                        <h3>Shahin Alom</h3>
-                        <span>View photos & videos</span>
-                    </div>
-                    <div class="person-arrow">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="9 18 15 12 9 6"/>
-                        </svg>
-                    </div>
-                </div>
-
-                <div class="person-card">
-                    <img src="rahul.jpg" alt="Rahul Ahmed" class="person-avatar" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2272%22 height=%2272%22><rect width=%2272%22 height=%2272%22 fill=%22%2327272a%22/><text x=%2250%25%22 y=%2255%25%22 font-size=%2224%22 fill=%22%23a1a1aa%22 text-anchor=%22middle%22>R</text></svg>'">
-                    <div class="person-info">
-                        <h3>Rahul Ahmed</h3>
-                        <span>View photos & videos</span>
-                    </div>
-                    <div class="person-arrow">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="9 18 15 12 9 6"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
         </section>
     </main>
 
@@ -1098,8 +1172,8 @@
 
     <script>
         /* =====================================================================
-           EASY CONFIGURATION: Add new folders, update photo counts, or add
-           custom Title & Description for specific photos/videos right here.
+           EASY CONFIGURATION: Update counts, add folders, or set custom
+           title/description for specific files right here.
            ===================================================================== */
         const TIMELINE_DATA = [
             {
@@ -1122,7 +1196,7 @@
                 title: "Eid 2025",
                 folder: "Eid 2025",
                 subtitle: "Festive days & brotherhood",
-                photoCount: 332,
+                photoCount: 140,
                 videos: [],
                 details: {}
             },
@@ -1209,6 +1283,49 @@
                 details: {}
             }
         ];
+
+        const PERSON_DATA = [
+            {
+                name: "Jubayer Talukdar",
+                folder: "jubayer",
+                avatar: "jubayer.jpg",
+                subtitle: "Personal captures & moments",
+                photoCount: 158,
+                details: {}
+            },
+            {
+                name: "Shahin Alom",
+                folder: "shahin",
+                avatar: "shahin.jpg",
+                subtitle: "Personal captures & moments",
+                photoCount: 17,
+                details: {}
+            },
+            {
+                name: "Rahul Ahmed",
+                folder: "rahul",
+                avatar: "rahul.jpg",
+                subtitle: "Personal captures & moments",
+                photoCount: 18,
+                details: {}
+            }
+        ];
+
+        const UNSPECIFIED_PHOTOS_CONFIG = {
+            title: "Unspecified Photos",
+            folder: "unspecified photos",
+            subtitle: "Unfiltered & unsorted photo collection",
+            photoCount: 175,
+            details: {}
+        };
+
+        const UNSPECIFIED_VIDEOS_CONFIG = {
+            title: "Unspecified Videos",
+            folder: "unspecified videos",
+            subtitle: "Unfiltered & unsorted video clips",
+            videoCount: 10,
+            details: {}
+        };
 
         /* =====================================================================
            WELCOME SCREEN & ABOUT MODAL LOGIC
@@ -1327,58 +1444,91 @@
         }
 
         /* =====================================================================
-           BACKGROUND PHOTO SLIDESHOWS (HOME TIMELINE CARD + TIMELINE FOLDERS)
+           50% OPACITY BACKGROUND SLIDESHOWS (PHOTOS + VIDEOS)
            ===================================================================== */
         let bgSlideshowIntervals = [];
 
-        function attachSlideshowToContainer(container, chapter, staggerIndex = 0) {
-            const sampleCount = Math.min(chapter.photoCount, 4);
+        function startSlideRotation(container, staggerIndex = 0) {
+            const slides = container.querySelectorAll('.card-bg-slide');
+            if (slides.length <= 1) return;
+
+            let currentSlide = 0;
+            const interval = setInterval(() => {
+                const currentSlides = container.querySelectorAll('.card-bg-slide');
+                if (currentSlides.length <= 1) return;
+                currentSlides[currentSlide % currentSlides.length].classList.remove('active-slide');
+                currentSlide = (currentSlide + 1) % currentSlides.length;
+                currentSlides[currentSlide].classList.add('active-slide');
+            }, 4200 + (staggerIndex * 350));
+
+            bgSlideshowIntervals.push(interval);
+        }
+
+        function attachPhotoSlideshow(container, basePath, photoCount, staggerIndex = 0) {
+            const sampleCount = Math.min(photoCount, 4);
             if (sampleCount <= 0) {
                 container.innerHTML = '';
                 return;
             }
 
-            const maxStart = Math.max(1, chapter.photoCount - sampleCount + 1);
+            const maxStart = Math.max(1, photoCount - sampleCount + 1);
             const startNum = Math.floor(Math.random() * maxStart) + 1;
 
             let slidesHTML = '';
             for (let i = 0; i < sampleCount; i++) {
-                const photoNum = ((startNum + i - 1) % chapter.photoCount) + 1;
-                const src = encodeURI(`timelinewise/${chapter.folder}/photo (${photoNum}).jpg`);
+                const photoNum = ((startNum + i - 1) % photoCount) + 1;
+                const src = encodeURI(`${basePath}/photo (${photoNum}).jpg`);
                 slidesHTML += `<img class="card-bg-slide ${i === 0 ? 'active-slide' : ''}" src="${src}" loading="lazy" alt="" onerror="this.remove()">`;
             }
             container.innerHTML = slidesHTML;
-
-            if (sampleCount > 1) {
-                let currentSlide = 0;
-                const interval = setInterval(() => {
-                    const slides = container.querySelectorAll('.card-bg-slide');
-                    if (slides.length <= 1) return;
-                    slides[currentSlide].classList.remove('active-slide');
-                    currentSlide = (currentSlide + 1) % slides.length;
-                    slides[currentSlide].classList.add('active-slide');
-                }, 4200 + (staggerIndex * 350));
-                bgSlideshowIntervals.push(interval);
-            }
+            startSlideRotation(container, staggerIndex);
         }
 
-        function initHomeTimelineSlideshow() {
-            const homeBg = document.getElementById('home-timeline-bg');
-            const chaptersWithPhotos = TIMELINE_DATA.filter(ch => ch.photoCount > 0);
-            if (chaptersWithPhotos.length === 0) return;
+        function attachVideoSlideshow(container, basePath, videoCount, staggerIndex = 0) {
+            const sampleCount = Math.min(videoCount, 4);
+            if (sampleCount <= 0) {
+                container.innerHTML = '';
+                return;
+            }
 
-            const randomChapter = chaptersWithPhotos[Math.floor(Math.random() * chaptersWithPhotos.length)];
-            attachSlideshowToContainer(homeBg, randomChapter, 0);
+            const maxStart = Math.max(1, videoCount - sampleCount + 1);
+            const startNum = Math.floor(Math.random() * maxStart) + 1;
+
+            let slidesHTML = '';
+            for (let i = 0; i < sampleCount; i++) {
+                const vidNum = ((startNum + i - 1) % videoCount) + 1;
+                const src = encodeURI(`${basePath}/video (${vidNum}).mp4#t=0.5`);
+                slidesHTML += `<video class="card-bg-slide ${i === 0 ? 'active-slide' : ''}" src="${src}" preload="metadata" muted playsinline onerror="this.remove()"></video>`;
+            }
+            container.innerHTML = slidesHTML;
+            startSlideRotation(container, staggerIndex);
+        }
+
+        function initHomeSlideshows() {
+            const homeTimelineBg = document.getElementById('home-timeline-bg');
+            const chaptersWithPhotos = TIMELINE_DATA.filter(ch => ch.photoCount > 0);
+            if (chaptersWithPhotos.length > 0) {
+                const randomChapter = chaptersWithPhotos[Math.floor(Math.random() * chaptersWithPhotos.length)];
+                attachPhotoSlideshow(homeTimelineBg, `timeline/${randomChapter.folder}`, randomChapter.photoCount, 0);
+            }
+
+            const homePersonBg = document.getElementById('home-person-bg');
+            const personsWithPhotos = PERSON_DATA.filter(p => p.photoCount > 0);
+            if (personsWithPhotos.length > 0) {
+                const randomPerson = personsWithPhotos[Math.floor(Math.random() * personsWithPhotos.length)];
+                attachPhotoSlideshow(homePersonBg, `person/${randomPerson.folder}`, randomPerson.photoCount, 1);
+            }
+
+            const homeUnspecPhotoBg = document.getElementById('home-unspec-photo-bg');
+            attachPhotoSlideshow(homeUnspecPhotoBg, UNSPECIFIED_PHOTOS_CONFIG.folder, UNSPECIFIED_PHOTOS_CONFIG.photoCount, 2);
+
+            const homeUnspecVideoBg = document.getElementById('home-unspec-video-bg');
+            attachVideoSlideshow(homeUnspecVideoBg, UNSPECIFIED_VIDEOS_CONFIG.folder, UNSPECIFIED_VIDEOS_CONFIG.videoCount, 3);
         }
 
         function renderTimelineCards() {
             const grid = document.getElementById('timeline-grid');
             grid.innerHTML = '';
-
-            bgSlideshowIntervals.forEach(clearInterval);
-            bgSlideshowIntervals = [];
-
-            initHomeTimelineSlideshow();
 
             TIMELINE_DATA.forEach((chapter, idx) => {
                 const totalItems = chapter.photoCount + chapter.videos.length;
@@ -1404,14 +1554,51 @@
                 `;
 
                 const bgLayer = card.querySelector('.card-bg-layer');
-                attachSlideshowToContainer(bgLayer, chapter, idx + 1);
+                attachPhotoSlideshow(bgLayer, `timeline/${chapter.folder}`, chapter.photoCount, idx + 4);
 
                 grid.appendChild(card);
             });
         }
 
+        function renderPersonCards() {
+            const list = document.getElementById('person-list');
+            list.innerHTML = '';
+
+            PERSON_DATA.forEach((person, idx) => {
+                const card = document.createElement('div');
+                card.className = 'person-card';
+                card.onclick = () => openPersonFolder(idx);
+
+                const fallbackSvg = `data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2272%22 height=%2272%22><rect width=%2272%22 height=%2272%22 fill=%22%2327272a%22/><text x=%2250%25%22 y=%2255%25%22 font-size=%2224%22 fill=%22%23a1a1aa%22 text-anchor=%22middle%22>${person.name.charAt(0)}</text></svg>`;
+
+                card.innerHTML = `
+                    <img src="${person.avatar}" alt="${person.name}" class="person-avatar" onerror="this.src='${fallbackSvg}'">
+                    <div class="person-info">
+                        <h3>${person.name}</h3>
+                        <span>${person.photoCount} Photos</span>
+                    </div>
+                    <div class="person-arrow">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                    </div>
+                `;
+
+                list.appendChild(card);
+            });
+        }
+
+        function initAllCardsAndSlideshows() {
+            bgSlideshowIntervals.forEach(clearInterval);
+            bgSlideshowIntervals = [];
+
+            initHomeSlideshows();
+            renderTimelineCards();
+            renderPersonCards();
+        }
+
         /* =====================================================================
-           LAZY BATCH GALLERY LOADER (ZERO-LAG FOR 300+ ITEMS)
+           LAZY BATCH GALLERY LOADER + MISSING FILE ("photo not found") HANDLER
            ===================================================================== */
         let activeMediaList = [];
         let renderedCount = 0;
@@ -1437,42 +1624,141 @@
 
         sentinelObserver.observe(document.getElementById('scroll-sentinel'));
 
-        function openTimelineFolder(chapterIndex) {
-            const chapter = TIMELINE_DATA[chapterIndex];
-            activeMediaList = [];
+        function loadGalleryIntoView({ title, subtitle, items }) {
+            activeMediaList = items;
             renderedCount = 0;
 
-            chapter.videos.forEach(vid => {
-                activeMediaList.push({
-                    type: 'video',
-                    src: encodeURI(`timelinewise/${chapter.folder}/${vid.file}`),
-                    fileName: vid.file,
-                    title: vid.title || vid.file,
-                    desc: vid.desc || chapter.title
-                });
-            });
-
-            for (let i = 1; i <= chapter.photoCount; i++) {
-                const fileName = `photo (${i}).jpg`;
-                const meta = chapter.details[fileName] || {};
-                activeMediaList.push({
-                    type: 'photo',
-                    src: encodeURI(`timelinewise/${chapter.folder}/${fileName}`),
-                    fileName: fileName,
-                    title: meta.title || "",
-                    desc: meta.desc || ""
-                });
-            }
-
-            document.getElementById('gallery-title').textContent = chapter.title;
+            document.getElementById('gallery-title').textContent = title;
             document.getElementById('gallery-subtitle').textContent =
-                `${chapter.subtitle} • ${activeMediaList.length} ${activeMediaList.length === 1 ? 'item' : 'items'}`;
+                `${subtitle} • ${activeMediaList.length} ${activeMediaList.length === 1 ? 'item' : 'items'}`;
 
             const galleryGrid = document.getElementById('gallery-grid');
             galleryGrid.innerHTML = '';
 
             appendMediaBatch();
             openView('gallery-view');
+        }
+
+        function openTimelineFolder(chapterIndex) {
+            const chapter = TIMELINE_DATA[chapterIndex];
+            const items = [];
+
+            chapter.videos.forEach(vid => {
+                const meta = chapter.details[vid.file] || {};
+                items.push({
+                    type: 'video',
+                    src: encodeURI(`timeline/${chapter.folder}/${vid.file}`),
+                    fileName: vid.file,
+                    title: meta.title || vid.title || "",
+                    desc: meta.desc || vid.desc || "",
+                    notFound: false
+                });
+            });
+
+            for (let i = 1; i <= chapter.photoCount; i++) {
+                const fileName = `photo (${i}).jpg`;
+                const meta = chapter.details[fileName] || {};
+                items.push({
+                    type: 'photo',
+                    src: encodeURI(`timeline/${chapter.folder}/${fileName}`),
+                    fileName: fileName,
+                    title: meta.title || "",
+                    desc: meta.desc || "",
+                    notFound: false
+                });
+            }
+
+            loadGalleryIntoView({
+                title: chapter.title,
+                subtitle: chapter.subtitle,
+                items
+            });
+        }
+
+        function openPersonFolder(personIndex) {
+            const person = PERSON_DATA[personIndex];
+            const items = [];
+
+            for (let i = 1; i <= person.photoCount; i++) {
+                const fileName = `photo (${i}).jpg`;
+                const meta = person.details[fileName] || {};
+                items.push({
+                    type: 'photo',
+                    src: encodeURI(`person/${person.folder}/${fileName}`),
+                    fileName: fileName,
+                    title: meta.title || "",
+                    desc: meta.desc || "",
+                    notFound: false
+                });
+            }
+
+            loadGalleryIntoView({
+                title: person.name,
+                subtitle: person.subtitle,
+                items
+            });
+        }
+
+        function openUnspecifiedPhotos() {
+            const cfg = UNSPECIFIED_PHOTOS_CONFIG;
+            const items = [];
+
+            for (let i = 1; i <= cfg.photoCount; i++) {
+                const fileName = `photo (${i}).jpg`;
+                const meta = cfg.details[fileName] || {};
+                items.push({
+                    type: 'photo',
+                    src: encodeURI(`${cfg.folder}/${fileName}`),
+                    fileName: fileName,
+                    title: meta.title || "",
+                    desc: meta.desc || "",
+                    notFound: false
+                });
+            }
+
+            loadGalleryIntoView({
+                title: cfg.title,
+                subtitle: cfg.subtitle,
+                items
+            });
+        }
+
+        function openUnspecifiedVideos() {
+            const cfg = UNSPECIFIED_VIDEOS_CONFIG;
+            const items = [];
+
+            for (let i = 1; i <= cfg.videoCount; i++) {
+                const fileName = `video (${i}).mp4`;
+                const meta = cfg.details[fileName] || {};
+                items.push({
+                    type: 'video',
+                    src: encodeURI(`${cfg.folder}/${fileName}`),
+                    fileName: fileName,
+                    title: meta.title || "",
+                    desc: meta.desc || "",
+                    notFound: false
+                });
+            }
+
+            loadGalleryIntoView({
+                title: cfg.title,
+                subtitle: cfg.subtitle,
+                items
+            });
+        }
+
+        function createNotFoundPlaceholder() {
+            const box = document.createElement('div');
+            box.className = 'not-found-box';
+            box.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="9" y1="9" x2="15" y2="15"/>
+                    <line x1="15" y1="9" x2="9" y2="15"/>
+                </svg>
+                <span>photo not found</span>
+            `;
+            return box;
         }
 
         function appendMediaBatch() {
@@ -1487,6 +1773,7 @@
                 card.onclick = () => openLightbox(i);
 
                 if (item.type === 'video') {
+                    card.classList.add('is-loaded');
                     card.innerHTML = `
                         <video class="media-thumb loaded" src="${item.src}#t=0.5" preload="metadata" muted playsinline></video>
                         <div class="video-badge">
@@ -1495,29 +1782,48 @@
                             </svg>
                             Video
                         </div>
-                        ${item.title ? `<div class="media-caption-bar"><h4>${item.title}</h4></div>` : ''}
+                        <div class="media-caption-bar">
+                            ${item.title ? `<div class="media-custom-title">${item.title}</div>` : ''}
+                            <div class="media-filename">${item.fileName}</div>
+                        </div>
                     `;
                 } else {
-                    const img = document.createElement('img');
-                    img.className = 'media-thumb';
-                    img.dataset.src = item.src;
-                    img.alt = item.title || item.fileName;
-                    img.onload = () => img.classList.add('loaded');
-
                     const skeleton = document.createElement('div');
                     skeleton.className = 'media-skeleton';
-
-                    card.appendChild(img);
                     card.appendChild(skeleton);
 
-                    if (item.title) {
-                        const caption = document.createElement('div');
-                        caption.className = 'media-caption-bar';
-                        caption.innerHTML = `<h4>${item.title}</h4>`;
-                        card.appendChild(caption);
-                    }
+                    const caption = document.createElement('div');
+                    caption.className = 'media-caption-bar';
+                    caption.innerHTML = `
+                        ${item.title ? `<div class="media-custom-title">${item.title}</div>` : ''}
+                        <div class="media-filename">${item.fileName}</div>
+                    `;
+                    card.appendChild(caption);
 
-                    imageObserver.observe(img);
+                    if (item.notFound) {
+                        card.classList.add('is-missing');
+                        card.insertBefore(createNotFoundPlaceholder(), caption);
+                    } else {
+                        const img = document.createElement('img');
+                        img.className = 'media-thumb';
+                        img.dataset.src = item.src;
+                        img.alt = item.title || item.fileName;
+
+                        img.onload = () => {
+                            img.classList.add('loaded');
+                            card.classList.add('is-loaded');
+                        };
+
+                        img.onerror = () => {
+                            item.notFound = true;
+                            img.remove();
+                            card.classList.add('is-missing');
+                            card.insertBefore(createNotFoundPlaceholder(), caption);
+                        };
+
+                        card.insertBefore(img, skeleton);
+                        imageObserver.observe(img);
+                    }
                 }
 
                 fragment.appendChild(card);
@@ -1565,16 +1871,36 @@
             document.getElementById('lb-counter').textContent =
                 `${currentLightboxIndex + 1} / ${activeMediaList.length}`;
 
-            downloadBtn.href = item.src;
-            downloadBtn.setAttribute('download', item.fileName);
-
-            if (item.type === 'video') {
-                container.innerHTML = `<video src="${item.src}" controls autoplay playsinline></video>`;
+            if (item.notFound) {
+                downloadBtn.classList.add('disabled-link');
+                downloadBtn.removeAttribute('href');
+                container.innerHTML = `
+                    <div class="lb-missing-placeholder">
+                        <p style="font-size: 1rem; color: #f4f4f5; margin-bottom: 0.35rem;">photo not found</p>
+                        <span style="font-size: 0.85rem;">${item.fileName}</span>
+                    </div>
+                `;
             } else {
-                container.innerHTML = `<img src="${item.src}" alt="${item.title || item.fileName}">`;
+                downloadBtn.classList.remove('disabled-link');
+                downloadBtn.href = item.src;
+                downloadBtn.setAttribute('download', item.fileName);
+
+                if (item.type === 'video') {
+                    container.innerHTML = `<video src="${item.src}" controls autoplay playsinline></video>`;
+                } else {
+                    const img = document.createElement('img');
+                    img.alt = item.title || item.fileName;
+                    img.onerror = () => {
+                        item.notFound = true;
+                        updateLightboxContent();
+                    };
+                    img.src = item.src;
+                    container.innerHTML = '';
+                    container.appendChild(img);
+                }
             }
 
-            document.getElementById('lb-title').textContent = item.title || '';
+            document.getElementById('lb-title').textContent = item.title || item.fileName;
             document.getElementById('lb-desc').textContent = item.desc || '';
         }
 
@@ -1588,7 +1914,7 @@
             }
         });
 
-        renderTimelineCards();
+        initAllCardsAndSlideshows();
     </script>
 </body>
 </html>
